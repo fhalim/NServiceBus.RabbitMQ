@@ -10,6 +10,8 @@
     {
         const string connectionString =
             "virtualHost=Copa;username=Copa;host=192.168.1.1:1234,192.168.1.2:2345;password=abc_xyz;port=12345;requestedHeartbeat=3;prefetchcount=2;maxRetries=4;usePublisherConfirms=true;maxWaitTimeForConfirms=02:03:39;retryDelay=01:02:03";
+        const string sslConnectionStringNoSSLHostName = "host=192.168.1.1:1234;usessl=true;";
+        const string sslConnectionStringWithSSLServerCanonicalName = "host=192.168.1.1:1234;usessl=true;sslservercanonicalname=abc123";
 
         [Test]
         public void Should_correctly_parse_full_connection_string() {
@@ -166,6 +168,42 @@
         {
             var parser = new ConnectionStringParser();
             parser.Parse("not a well formed name value pair;");
+        }
+
+        [Test]
+        public void ShouldDefaultSSLToFalse()
+        {
+            var parser = new ConnectionStringParser();
+            var connectionConfiguration = parser.Parse(connectionString);
+
+            Assert.AreEqual(false, connectionConfiguration.UseSSL);
+        }
+
+        [Test]
+        public void ShouldParseSpecifiedSSLFlag()
+        {
+            var parser = new ConnectionStringParser();
+            var connectionConfiguration = parser.Parse(sslConnectionStringNoSSLHostName);
+
+            Assert.AreEqual(true, connectionConfiguration.UseSSL);
+        }
+
+        [Test]
+        public void ShouldDefaultSSLServerCanonicalNameToFirstHostName()
+        {
+            var parser = new ConnectionStringParser();
+            var connectionConfiguration = parser.Parse(sslConnectionStringNoSSLHostName);
+
+            Assert.AreEqual("192.168.1.1", connectionConfiguration.SSLServerCanonicalName);
+        }
+
+        [Test]
+        public void ShouldReadSSLServerCanonicalName()
+        {
+            var parser = new ConnectionStringParser();
+            var connectionConfiguration = parser.Parse(sslConnectionStringWithSSLServerCanonicalName);
+
+            Assert.AreEqual("abc123", connectionConfiguration.SSLServerCanonicalName);
         }
     }
 }

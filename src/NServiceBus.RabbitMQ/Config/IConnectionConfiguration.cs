@@ -17,5 +17,7 @@
         TimeSpan RetryDelay { get; set; }
         bool UsePublisherConfirms { get; set; }
         TimeSpan MaxWaitTimeForConfirms { get; set; }
+        bool UseSSL { get; set; }
+        string SSLServerCanonicalName { get; set; }
     }
 }

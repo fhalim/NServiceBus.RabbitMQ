@@ -37,7 +37,9 @@
             get { return hosts; }
             private set { hosts = value; }
         }
+        public bool UseSSL { get; set; }
 
+        public string SSLServerCanonicalName { get; set; }
         public ConnectionConfiguration()
         {
             // set default values
@@ -85,6 +87,10 @@
                 {
                     ((HostConfiguration)hostConfiguration).Port = Port;
                 }
+            }
+            if (SSLServerCanonicalName == null)
+            {
+                SSLServerCanonicalName = Hosts.First().Host;
             }
         }
 

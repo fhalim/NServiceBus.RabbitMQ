@@ -36,7 +36,12 @@
                         UserName = Configuration.UserName,
                         Password = Configuration.Password,
                         RequestedHeartbeat = Configuration.RequestedHeartbeat,
-                        ClientProperties = ConvertToHashtable(Configuration.ClientProperties)
+                        ClientProperties = ConvertToHashtable(Configuration.ClientProperties),
+                        Ssl = new SslOption
+                        {
+                            Enabled = Configuration.UseSSL,
+                            ServerName = Configuration.SSLServerCanonicalName
+                        }
                     }, hostConfiguration));
             }
         }
